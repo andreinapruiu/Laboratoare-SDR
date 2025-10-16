@@ -1,0 +1,14 @@
+# Recombee API Configuration
+# Copy this file to .env and fill in your actual values
+
+# Your Recombee API URL (e.g., https://your-database.recombee.com)
+RECOMBEE_URL=https://your-database.recombee.com
+
+# Your Recombee Database ID
+RECOMBEE_DATABASE_ID=your-database-id
+
+# Your Recombee Secret Token
+RECOMBEE_SECRET_TOKEN=your-secret-token
+
+# Optional: Batch size for API requests (default: 100)
+RECOMBEE_BATCH_SIZE=100
