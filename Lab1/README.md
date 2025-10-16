@@ -1,179 +1,82 @@
-# Lab 1 - Movie Dataset Analysis and API Implementation
+# Lab 1 – Movie Dataset and Recombee Integration
 
 ## Overview
-This project implements a Python script that analyzes a movie dataset and demonstrates API functionality for sending product attributes and their types.
+This lab demonstrates how to use the **Recombee API** to register item properties and upload dataset items.  
+The chosen dataset contains movie information, where each movie is treated as a “product” with multiple attributes.  
+The goal is to define item properties, send their types to Recombee, and upload up to 1000 items.
+
+---
 
 ## Dataset Information
-- **File**: `movies-QueryResult.csv`
-- **Size**: 1000 movies (meets the requirement of 100+ products, limited to max 1000)
-- **Source**: IMDB movie database
-- **Attributes**: 22 columns with various movie properties
+- **File:** `movies-QueryResult.csv`  
+- **Source:** IMDb movie database  
+- **Entries:** 1000 movies (limited to the required maximum of 1000)  
+- **Attributes:** 22 columns with various properties such as title, genre, year, duration, country, language, director, etc.  
+- **Purpose:** Each movie acts as a dataset item with several attributes of different data types (string, integer, float).
 
-## Requirements Met
-✅ **Dataset Requirements**:
-- Has 1000+ products (1000 movies)
-- Each movie has multiple attributes/properties
-- Minimum 3+ properties per movie
-- Different data types (string, integer, float)
+---
 
-✅ **API Functionality**:
-- Sends product attribute names and their types
-- Demonstrates proper API communication
-- Includes error handling and response processing
+## Properties Sent to Recombee
+The script defines and uploads the following movie attributes to the Recombee database:
 
-## Key Product Attributes
-The script analyzes and sends the following movie attributes with their types:
+| Property | Type | Description |
+|-----------|------|-------------|
+| `title` | string | Movie title |
+| `year` | int | Year of release |
+| `genre` | string | Movie genre |
+| `duration` | int | Movie duration in minutes |
+| `avg_vote` | double | Average rating |
+| `country` | string | Country of production |
+| `language` | string | Primary language |
+| `director` | string | Director of the movie |
+| `votes` | int | Number of votes |
 
-1. **title** (string) - Movie title
-2. **year** (integer) - Year of release  
-3. **genre** (string) - Movie genre(s)
-4. **duration** (integer) - Movie duration in minutes
-5. **avg_vote** (float) - Average rating/vote
-6. **budget** (string) - Movie budget
-7. **country** (string) - Country of production
-8. **language** (string) - Primary language
-9. **director** (string) - Movie director
-10. **votes** (integer) - Number of votes
+All properties are created using the **AddItemProperty** API call and filled using **SetItemValues** with `cascadeCreate=True`.
+
+---
 
 ## Files
-- `lab1.py` - Main Python script
-- `movies-QueryResult.csv` - Movie dataset
-- `requirements.txt` - Python dependencies
-- `get_recombee_credentials.py` - Helper script for finding Recombee credentials
-- `setup_env.py` - Interactive script to create .env file
-- `env_example.txt` - Example .env file template
-- `README.md` - This documentation file
+- `lab1.py` – Main Python script (analysis + Recombee API implementation)  
+- `movies-QueryResult.csv` – Dataset of 1000 movies  
+- `requirements.txt` – Python dependencies  
+- `env_example.txt` – Example `.env` file template  
+- `README.md` – This documentation file  
 
-## Installation and Usage
+---
 
-### Prerequisites
-- Python 3.7+
-- pip package manager
+## Installation and Setup
 
-### Installation
+### 1. Install dependencies
 ```bash
-# Install required dependencies
-pip3 install -r requirements.txt
+pip install -r requirements.txt
+````
+
+### 2. Create a `.env` file
+
+```
+RECOMBEE_DATABASE_ID=your_database_id
+RECOMBEE_SECRET_TOKEN=your_private_token
+RECOMBEE_BATCH_SIZE=100
+CSV_PATH=movies-QueryResult.csv
+```
+---
+
+## Running the Script
+
+```bash
+python lab1.py
 ```
 
-### Running the Script
-```bash
-python3 lab1.py
-```
+When executed, the script will:
 
-The script will:
 1. Load and analyze the movie dataset
-2. Display comprehensive statistics
-3. Show product attributes with types and examples
+2. Display dataset statistics and attribute types
+3. Show key movie attributes with examples
 4. Generate a summary report
-5. Offer API options:
-   - Send to Recombee (to add more properties to your items)
-   - Send to demo API (httpbin.org/post)
-   - Skip API calls
+5. Ask what API action to take:
 
-### Recombee Integration
-To add more properties to your Recombee items:
+   * **Option 1:** Send properties and items to Recombee
+   * **Option 2:** Send a demo request to httpbin.org
+   * **Option 3:** Skip API calls
 
-#### Option 1: Using .env file (Recommended)
-1. **Setup your credentials**:
-   ```bash
-   python3 setup_env.py
-   ```
-   This will create a `.env` file with your Recombee credentials.
 
-2. **Run the main script**:
-   ```bash
-   python3 lab1.py
-   ```
-
-3. **Choose option 1** when prompted for API options
-
-#### Option 2: Manual setup
-1. **Create .env file manually**:
-   ```bash
-   cp env_example.txt .env
-   # Then edit .env with your actual values
-   ```
-
-2. **Get your credentials**:
-   ```bash
-   python3 get_recombee_credentials.py
-   ```
-
-3. **Run the main script**:
-   ```bash
-   python3 lab1.py
-   ```
-
-4. **Choose option 1** and enter credentials manually if .env file is not found
-
-#### Required Credentials
-You'll need these from your Recombee admin panel (Integration > Catalog Feed):
-- **API URL** (e.g., `https://your-database.recombee.com`)
-- **Database ID**
-- **Secret Token**
-
-The script will then add these properties to your 1000 movie items:
-- `year` (integer)
-- `genre` (string) 
-- `duration` (integer)
-- `avg_vote` (float)
-- `country` (string)
-- `language` (string)
-- `director` (string)
-- `votes` (integer)
-
-### API Demonstration
-The script also offers a demo option using `httpbin.org/post` for testing purposes.
-
-## Features
-
-### Dataset Analysis
-- Loads CSV data using pandas
-- Analyzes data types and statistics
-- Shows sample data and distributions
-- Calculates data quality metrics
-
-### Product Attributes
-- Extracts key movie attributes
-- Categorizes by data type (string, integer, float)
-- Provides examples and non-null counts
-- Formats data for API transmission
-
-### API Communication
-- Sends structured JSON payload
-- Includes dataset metadata
-- Handles HTTP responses and errors
-- Provides detailed logging
-
-## Sample Output
-```
-🎬 MOVIE DATASET ANALYZER - LAB 1
-============================================================
-✓ Dataset loaded successfully: 1000 movies
-✓ Dataset columns: ['imdb_title_id', 'title', 'original_title', ...]
-
-Total movies: 1000
-Total attributes: 22
-
-✓ Dataset meets requirements:
-  • Has 1000+ products: ✓ (1000 movies)
-  • Has 3+ attributes: ✓ (10 attributes)
-  • Attributes have different types: ✓ (string, integer, float)
-```
-
-## Technical Details
-- **Language**: Python 3
-- **Libraries**: pandas, requests, json
-- **Data Format**: CSV
-- **API Format**: JSON
-- **Error Handling**: Comprehensive try-catch blocks
-- **Logging**: Detailed console output
-
-## Future Enhancements
-This script serves as the foundation for future laboratory work and can be extended with:
-- Additional data analysis features
-- More sophisticated API endpoints
-- Data visualization capabilities
-- Machine learning integration
-- Real-time data processing
