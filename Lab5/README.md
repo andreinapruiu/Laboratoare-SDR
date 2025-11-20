@@ -1,5 +1,3 @@
-# Item-Based Collaborative Filtering – Electronics Recommendations
-
 ## 1. Task Description
 
 In this laboratory exercise, I implemented an **Item-Based Collaborative Filtering (Item–Item CF)** algorithm, starting from the template file `item_based_cf_test.py` provided on Moodle. The goals were to:
@@ -10,13 +8,13 @@ In this laboratory exercise, I implemented an **Item-Based Collaborative Filteri
 * generate **Top-K recommendations** for a selected user
 * explain and interpret the results
 
-The entire implementation has been adapted to a small but realistic dataset of **electronics products**, ensuring consistency with previous labs.
+For this lab, I built a **10×10 interaction matrix** containing 10 users and 10 electronics items. This creates more varied similarity patterns and allows the collaborative filtering algorithm to produce richer recommendations.
 
 ---
 
 ## 2. Dataset: User–Item Rating Matrix
 
-I used 5 real users and 5 real electronics products extracted from the earlier cosine-similarity dataset:
+I used 10 electronics products that belong to related categories (Apple ecosystem, laptops, audio devices, tablets, cameras). This ensures meaningful co-rating patterns.
 
 ### **Products (Items)**
 
@@ -27,29 +25,39 @@ I used 5 real users and 5 real electronics products extracted from the earlier c
 | 2  | MSI Modern 15.6" – Intel Core i7-1255U – 1080p              |
 | 3  | MSI Modern 15.6" – Intel Core i5-1235U – 1080p – Windows 11 |
 | 4  | Ooma Telo Air 2 Wireless Wi-Fi Home Phone Service           |
+| 5  | Samsung Galaxy Tab S9 – 11" AMOLED – 256GB                  |
+| 6  | Sony WH-1000XM5 Noise-Cancelling Headphones                 |
+| 7  | Apple iPad Air (M1) – 10.9" – Wi-Fi – 256GB                 |
+| 8  | Apple Watch SE (2nd Gen) – GPS – 44mm                       |
+| 9  | Canon EOS R50 Mirrorless Camera – 4K Video                  |
 
 ### **Users**
 
-`Ana`, `Bogdan`, `Carmen`, `Dan`, `Elena`
+`Ana`, `Bogdan`, `Carmen`, `Dan`, `Elena`, `Florin`, `Geanina`, `Horia`, `Irina`, `Vlad`
 
 ### **Ratings (1–5 scale, 0 = no interaction)**
 
 ```text
-          Item 0   Item 1   Item 2   Item 3   Item 4
-Ana       [  5       4        0        0        3  ]
-Bogdan    [  5       5        4        0        0  ]
-Carmen    [  0       4        5        5        0  ]
-Dan       [  4       0        4        5        3  ]
-Elena     [  0       4        0        5        4  ]
+          0  1  2  3  4  5  6  7  8  9
+Ana     [ 5, 4, 0, 0, 3, 4, 0, 5, 5, 0 ]
+Bogdan  [ 5, 5, 4, 0, 0, 3, 4, 4, 5, 0 ]
+Carmen  [ 0, 4, 5, 5, 0, 0, 4, 0, 3, 4 ]
+Dan     [ 4, 0, 4, 5, 3, 0, 3, 0, 4, 5 ]
+Elena   [ 0, 4, 0, 5, 4, 0, 5, 0, 3, 4 ]
+Florin  [ 3, 4, 0, 4, 5, 0, 4, 3, 0, 5 ]
+Geanina [ 0, 0, 5, 4, 0, 5, 4, 4, 0, 3 ]
+Horia   [ 4, 4, 3, 0, 4, 5, 0, 5, 5, 3 ]
+Irina   [ 5, 5, 3, 0, 0, 4, 0, 5, 5, 4 ]
+Vlad    [ 0, 3, 4, 5, 4, 0, 3, 4, 3, 5 ]
 ```
 
 Interpretation:
 
-* **5** → strong preference / frequent use
-* **1** → weak preference
-* **0** → no interaction (missing data)
+* **5** = strong preference
+* **1** = weak preference
+* **0** = user did not rate the item
 
-The matrix is small enough to interpret manually but structured enough for collaborative filtering.
+This matrix provides the necessary co-rating signals for computing item similarities.
 
 ---
 
@@ -57,122 +65,129 @@ The matrix is small enough to interpret manually but structured enough for colla
 
 ### 3.1 Item–Item Similarity (Cosine)
 
-Each item is represented as a vector of ratings given by all users.
+Each item is represented as a vector of ratings from all 10 users.
+Cosine similarity is used to measure how similar items are based on shared user behavior.
 
-Similarity is computed as:
+Example code:
 
 ```python
 item_similarity = cosine_similarity(user_item_matrix.T)
 ```
 
-The resulting similarity matrix was:
+### **Similarity Matrix (Real Output)**
 
 ```
-[[1.         0.64830462 0.58693919 0.28426762 0.56997045]
- [0.64830462 1.         0.62009915 0.5405899  0.56202695]
- [0.58693919 0.62009915 1.         0.6882472  0.27258651]
- [0.28426762 0.5405899  0.6882472  1.         0.69310328]
- [0.56997045 0.56202695 0.27258651 0.69310328 1.        ]]
+[[1.         0.7717 0.5431 0.2586 0.5645 0.7300 0.3949 0.8001 0.8618 0.5239]
+ [0.7717     1.     0.6221 0.5242 0.6757 0.6313 0.6642 0.8047 0.8724 0.7072]
+ [0.5431  0.6221     1.     0.6869 0.3893 0.6229 0.7181 0.6627 0.7221 0.7506]
+ [0.2586  0.5242 0.6869     1.     0.6843 0.1825 0.9003 0.3636 0.4731 0.8943]
+ [0.5645  0.6757 0.3893 0.6843     1.     0.3516 0.6182 0.6022 0.6224 0.7769]
+ [0.7300  0.6313 0.6229 0.1825 0.3516     1.     0.3243 0.8850 0.7013 0.4061]
+ [0.3949  0.6642 0.7181 0.9003 0.6182 0.3243     1.     0.4712 0.5497 0.7979]
+ [0.8001  0.8047 0.6627 0.3636 0.6022 0.8850 0.4712     1.     0.7788 0.6011]
+ [0.8618  0.8724 0.7221 0.4731 0.6224 0.7013 0.5497 0.7788     1.     0.6620]
+ [0.5239  0.7072 0.7506 0.8943 0.7769 0.4061 0.7979 0.6011 0.6620     1.    ]]
 ```
 
-This matrix indicates how similar each product is to every other product based on user co-ratings.
+Interpretation:
+
+* Items with similarity > **0.7** are strongly related (Apple products, MSI laptops).
+* Items with similarity near **1.0** share highly aligned user patterns.
+* This matrix drives the recommendation process.
 
 ---
 
 ### 3.2 Predicting Unknown Ratings
 
-For a user **u** and an unrated item **j**, the predicted score is:
+To predict how much a target user would like an unrated item, CF computes:
 
-```
-score(u, j) = Σ_i rating(u, i) × similarity(i, j)
-```
-
-where **i** are the items user **u** has already rated.
+[
+\text{score}(u, j) = \sum_{i \in \text{RatedBy}(u)} \big( \text{rating}(u, i) \times \text{similarity}(i, j) \big)
+]
 
 In code:
 
 ```python
-user_ratings = user_item_matrix[user_id]
 scores = user_ratings @ item_similarity
-scores[user_ratings > 0] = -1  # mask already rated items
+scores[user_ratings > 0] = -1
 ```
 
-This produces a score for each unrated item, allowing us to rank and recommend them.
+* Items that Carmen already rated get a score of **−1**
+* Remaining items get predicted scores
 
 ---
 
-## 4. Top-K Recommendations for User “Ana”
+## 4. Top-K Recommendations for User “Carmen”
 
-### 4.1 Ana’s ratings:
+### 4.1 Carmen’s Ratings
 
 ```
-Ana: [5, 4, 0, 0, 3]
+[0, 4, 5, 5, 0, 0, 4, 0, 3, 4]
 ```
 
-She strongly prefers:
+Carmen strongly likes:
 
-* **Mac mini (M2)**
-* **Mac mini (M2 Pro)**
+* **MSI Modern i7 laptop (5)**
+* **MSI Modern i5 laptop (5)**
+* **Sony WH-1000XM5 (4)**
+* **Canon EOS R50 camera (4)**
 
-And moderately likes:
-
-* **Ooma Telo Air 2**
-
-She has *no ratings yet* for the two MSI laptops.
+Moderate interest in Apple Watch (3).
 
 ---
 
 ### 4.2 Predicted Scores (Real Output)
 
 ```
-Predicted scores for all items (after CF):
-  Item 0: Mac mini – Apple M2 -> score = -1.0000
-  Item 1: Mac mini – Apple M2 Pro -> score = -1.0000
-  Item 2: MSI Modern 15.6" (i7) -> score = 6.2329
-  Item 3: MSI Modern 15.6" (i5) -> score = 5.6630
-  Item 4: Ooma Telo Air 2 -> score = -1.0000
+Item 0: Mac mini M2 -> 13.3564
+Item 1: Mac mini M2 Pro -> -1
+Item 2: MSI Modern i7 -> -1
+Item 3: MSI Modern i5 -> -1
+Item 4: Ooma Telo Air 2 -> 15.5186
+Item 5: Galaxy Tab S9 -> 11.5776
+Item 6: Sony XM5 -> -1
+Item 7: iPad Air M1 -> 14.9758
+Item 8: Apple Watch SE -> -1
+Item 9: Canon EOS R50 -> -1
 ```
 
-Items with existing ratings receive `-1` to prevent recommending them again.
+She already rated items 1, 2, 3, 6, 8, 9, so they are masked as −1.
+
+Top candidate scores:
+
+* **15.5186 → Ooma Telo Air 2**
+* **14.9758 → iPad Air M1**
+* **13.3564 → Mac mini M2**
+* **11.5776 → Galaxy Tab S9**
 
 ---
 
-### 4.3 Top-2 Recommendations
+### 4.3 Final Top-2 Recommendations
 
 ```
-Top-2 recommended items for Ana:
-  -> MSI Modern 15.6" – Intel Core i7-1255U – 1080p (score = 6.2329)
-  -> MSI Modern 15.6" – Intel Core i5-1235U – 1080p – Windows 11 (score = 5.6630)
+Top-2 recommended items for Carmen:
+  -> Ooma Telo Air 2 Wireless Wi-Fi Home Phone Service (15.5186)
+  -> Apple iPad Air (M1) - 10.9" - Wi-Fi - 256GB (14.9758)
 ```
 
 ---
 
-## 5. Interpretation of Results (Extended Explanation)
+## 5. Interpretation of Results
 
-### ✔ Why MSI laptops are recommended for Ana
+### ✔ Why “Ooma Telo Air 2” is recommended
 
-1. **Users with similar taste patterns**
-   Users who love the same Apple products as Ana (Bogdan, Carmen, Dan) also rated MSI laptops very highly.
+* Ooma has **very high similarity** to items Carmen likes:
 
-2. **High item–item similarity**
-   In the similarity matrix:
+  * MSI laptops (0.68)
+  * Sony XM5 headphones (0.61)
+  * iPad Air (0.60)
+* Users with Carmen’s profile (productivity + media consumption) tend to also rate home-networking / VoIP products highly.
 
-   * MSI laptops have similarities around **0.6–0.68** with both Mac minis
-   * They also show strong mutual similarity (0.688)
+### ✔ Why “iPad Air M1” is the second recommendation
 
-3. **Collaborative filtering effect**
-   The algorithm essentially says:
+* Strong similarity with Carmen’s favorite items:
 
-   > “Users who like Mac mini (M2/M2 Pro) also tend to like MSI Modern laptops.”
-
-4. **Weighted scoring ranks the MSI i7 first**
-   Because:
-
-   * It is the closest match to the items Ana rated highly
-   * It has strong endorsement across multiple users
-   * It shares similar “premium productivity device” characteristics
-
-5. **Prediction values are realistic**
-   A score of **6.23** is high, but interpretable — it comes from weighted contributions of her strong ratings (5 and 4) multiplied by ~0.6 similarity values.
-
----
+  * MSI i7 (0.66)
+  * Sony XM5 (0.47)
+  * Canon EOS camera (0.60)
+* Fits her usage pattern: productivity + multimedia + creativity.

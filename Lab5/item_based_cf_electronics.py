@@ -50,7 +50,7 @@ def recommend_items(user_id, user_item_matrix, item_similarity, top_k=3):
     return recommended_indices, scores
 
 
-target_user_id = 0
+target_user_id = 2
 top_k = 3
 
 recommended_items, scores = recommend_items(
