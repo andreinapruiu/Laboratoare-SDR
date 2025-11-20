@@ -174,8 +174,6 @@ def main():
     print(f"   Sub-category: {prod_nd_2['sub_category']}")
     print(f"Cosine similarity: {best_nd_score:.4f}")
 
-    print("\nDone. You can now check similarity_matrix.csv and use these results in README.txt.")
-
 
 if __name__ == "__main__":
     main()

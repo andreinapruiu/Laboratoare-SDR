@@ -124,49 +124,66 @@ The script prints both pairs, including:
 
 ---
 
-## 6. 🧠 Examples of Similar Product Pairs (Not Only the Most Similar Ones)
+Absolutely — **now that we have the REAL output from your script**, we MUST update Point 6 of your README to reflect the actual pairs your model found.
 
-### 🔹 **Example Pair #1: Smartwatches with Similar Features**
+This makes your README accurate, verifiable, and perfectly aligned with the assignment requirements.
 
-* **Product A:**
-  *Apple Watch SE (2nd Generation) (GPS) Sport Loop*
+Below is **the corrected and improved Section 6**, rewritten using your **exact console output**.
 
-* **Product B:**
-  *Apple Watch SE (2nd Generation) (GPS + Cellular) Sport Loop*
-
-**Why they are similar:**
-
-* Both descriptions highlight **health tracking**, **fitness activity**, **sleep monitoring**, and **integration with iPhone**.
-* The only feature difference is the presence of **cellular connectivity** in the second model.
-* After preprocessing (lemmatization + stopwords removal), both items share a nearly identical set of informative keywords such as:
-  *apple, watch, generation, sport, loop, track, workout, active, health, goal, monitor*.
-
-This leads to a cosine similarity score close to **0.99**, which correctly reflects that they are two variants of the same product line.
+You can paste this directly into your README.md.
 
 ---
 
-### 🔹 **Example Pair #2: Home Security Cameras with Overlapping Functionality**
+# ✅ **Updated README – Section 6 (FINAL VERSION)**
 
-* **Product A:**
-  *Ring Indoor Cam (2nd Gen) Plug-In, Compact Indoor Security Camera*
+*(Based on YOUR real similarity results)*
 
-* **Product B:**
-  *Blink Mini – Compact Indoor Plug-In HD Security Camera*
+## 6. 🧠 Examples of Similar Product Pairs (Using Real Output)
+
+Below are two product pairs identified by the cosine similarity algorithm in the electronics dataset. These examples come directly from the computed similarity matrix and illustrate meaningful relationships detected by TF–IDF and cosine similarity.
+
+---
+
+### 🔹 **Example Pair #1: Two MSI Modern Laptops (i5 vs i7 Variants)**
+
+* **Product A (index 295):**
+  *MSI Modern 15.6" Laptop – 12th Gen Intel Core i7-1255U – 1080p*
+
+* **Product B (index 316):**
+  *MSI Modern 15.6" Laptop – 12th Gen Intel Core i5-1235U – 1080p – Windows 11*
+
+**Cosine Similarity: 0.9907**
 
 **Why they are similar:**
+These two products are **closely related configurations** of the same MSI Modern 15.6" laptop line. Their titles and features share the same core terminology:
 
-* Both products are **indoor plug-in security cameras**, designed for home monitoring.
-* Their feature descriptions emphasize similar capabilities:
+* *msi*, *modern*, *laptop*, *15.6*, *12th*, *gen*, *intel*, *core*, *u*, *1080p*
+* Differences are limited to CPU model (i7 vs i5) and an OS mention (Windows 11)
 
-  * *HD video*
-  * *motion detection*
-  * *smart home compatibility*
-  * *indoor surveillance*
-* After cleaning the text, both descriptions heavily focus on terms like:
-  *indoor, camera, plug, security, motion, detection, video, home, compact*
-* They belong to the same functional category even though they are different brands (Ring vs. Blink).
+The strong shared vocabulary after preprocessing results in a similarity close to **0.99**.
 
-Their cosine similarity score is high because the TF–IDF representation captures that they describe almost identical **use cases** and **attributes**.
+---
+
+### 🔹 **Example Pair #2: Two Variants of Apple Mac mini**
+
+* **Product A (index 17):**
+  *Mac mini – Apple M2 Chip 8-core CPU, 10-core GPU – 8GB Memory – 256GB SSD – Silver*
+
+* **Product B (index 22):**
+  *Mac mini – Apple M2 Pro Chip 10-core CPU, 16-core GPU – 16GB Memory – 512GB SSD – Silver*
+
+**Cosine Similarity: 0.9958**
+
+**Why they are similar:**
+These two products are **different configurations** of the same model line (Apple Mac mini).
+Their titles and feature descriptions share the same core terminology:
+
+* *Mac mini*, *Apple*, *M2*, *CPU*, *GPU*, *Memory*, *SSD*, *Silver*
+
+The only differences relate to hardware specifications (M2 vs M2 Pro, RAM, storage).
+Since most words overlap and variations are minor, their TF–IDF vectors are extremely close, resulting in a cosine similarity of **0.9958**.
+
+This shows the algorithm correctly identifies products that differ only by upgraded components.
 
 ---
 
